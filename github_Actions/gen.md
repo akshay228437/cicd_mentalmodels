@@ -868,4 +868,3 @@ jobs:
 #    instead of long-lived cloud credentials.
 ```
 
-The key point is: **inside the Markdown, the entire YAML example is one fenced code block**. Therefore lines like `# COMMON CONTEXTS` are displayed as YAML comments, **not Markdown headings**, and won't become oversized headings.
