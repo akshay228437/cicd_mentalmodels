@@ -1,9 +1,3 @@
-Ah, yes — I understand now. You mean the original full generic YAML content was good, but when pasted into the .md, some lines such as Common GitHub Actions Features / Options, Reusable Workflow Example, etc. became headings even though they were intended to be comments/labels inside the YAML example.
-
-So the fix is not to change the content, but to make the Markdown structure clean: only the actual document title/sections are Markdown headings, while everything inside the YAML example remains inside one text code block.
-
-Here is the corrected copy-pasteable Markdown structure:
-
 # GitHub Actions Generic YAML Structure
 
 ## Full Generic Structure
