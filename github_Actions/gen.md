@@ -570,301 +570,298 @@ jobs:
 
 ```
 
+## Common GitHub Actions Features / Options
+
+### Job Condition Examples
+
 ```yaml
-# ============================================================
-# COMMON GITHUB ACTIONS FEATURES / OPTIONS
-# ============================================================
+if: github.ref == 'refs/heads/main'
 
-# Job condition examples:
-#
-# if: github.ref == 'refs/heads/main'
-#
-# if: github.event_name == 'pull_request'
-#
-# if: startsWith(github.ref, 'refs/tags/')
-#
-# if: success()
-#
-# if: failure()
-#
-# if: always()
-#
-# if: cancelled()
+if: github.event_name == 'pull_request'
 
+if: startsWith(github.ref, 'refs/tags/')
 
-# Step condition examples:
-#
-# - name: Production only
-#   if: github.ref == 'refs/heads/main'
-#   run: echo "Production"
+if: success()
 
+if: failure()
 
-# ============================================================
-# COMMON CONTEXTS
-# ============================================================
+if: always()
 
-# GitHub context:
-# ${{ github.repository }}
-# ${{ github.ref }}
-# ${{ github.sha }}
-# ${{ github.actor }}
-# ${{ github.event_name }}
-# ${{ github.workspace }}
-# ${{ github.run_id }}
-# ${{ github.run_number }}
-
-
-# Environment:
-# ${{ env.APP_NAME }}
-
-
-# Secrets:
-# ${{ secrets.API_KEY }}
-# ${{ secrets.DEPLOY_TOKEN }}
-
-
-# Variables:
-# ${{ vars.ENVIRONMENT }}
-
-
-# Job outputs:
-# ${{ needs.build.outputs.version }}
-
-
-# Matrix:
-# ${{ matrix.node-version }}
-
-
-# Steps:
-# ${{ steps.version.outputs.version }}
-
-
-# ============================================================
-# REUSABLE WORKFLOW EXAMPLE
-# ============================================================
-
-# A reusable workflow can use:
-#
-# on:
-#   workflow_call:
-#     inputs:
-#       environment:
-#         required: true
-#         type: string
-#
-#     secrets:
-#       deploy_token:
-#         required: true
-#
-# Then call it using:
-#
-# jobs:
-#   deploy:
-#     uses: ./.github/workflows/deploy.yml
-#     with:
-#       environment: production
-#     secrets:
-#       deploy_token: ${{ secrets.DEPLOY_TOKEN }}
-
-
-# ============================================================
-# REUSABLE WORKFLOW / EXTERNAL WORKFLOW CALL
-# ============================================================
-
-# jobs:
-#   deploy:
-#     uses: organization/repository/.github/workflows/deploy.yml@main
-#     with:
-#       environment: production
-#     secrets: inherit
-
-
-# ============================================================
-# COMPOSITE / CUSTOM ACTION EXAMPLE
-# ============================================================
-
-# steps:
-#   - name: Run custom action
-#     uses: ./.github/actions/my-action
-#     with:
-#       environment: production
-
-
-# ============================================================
-# DOCKER EXAMPLE
-# ============================================================
-
-# - name: Build Docker image
-#   run: |
-#     docker build \
-#       --tag my-app:${{ github.sha }} \
-#       .
-#
-# - name: Login to registry
-#   uses: docker/login-action@v3
-#   with:
-#     registry: ghcr.io
-#     username: ${{ github.actor }}
-#     password: ${{ secrets.GITHUB_TOKEN }}
-#
-# - name: Push image
-#   run: |
-#     docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
-
-
-# ============================================================
-# ARTIFACT EXAMPLES
-# ============================================================
-
-# Upload:
-#
-# - uses: actions/upload-artifact@v4
-#   with:
-#     name: artifact-name
-#     path: ./dist
-
-
-# Download:
-#
-# - uses: actions/download-artifact@v4
-#   with:
-#     name: artifact-name
-#     path: ./dist
-
-
-# ============================================================
-# CACHE EXAMPLE
-# ============================================================
-
-# - uses: actions/cache@v4
-#   with:
-#     path: ~/.cache/my-tool
-#     key: ${{ runner.os }}-my-tool-${{ hashFiles('**/lockfile') }}
-#     restore-keys: |
-#       ${{ runner.os }}-my-tool-
-
-
-# ============================================================
-# SHELL OPTIONS
-# ============================================================
-
-# defaults:
-#   run:
-#     shell: bash
-#     working-directory: ./app
-
-
-# ============================================================
-# DEFAULT WORKING DIRECTORY
-# ============================================================
-
-# defaults:
-#   run:
-#     working-directory: ./src
-
-
-# ============================================================
-# SELF-HOSTED RUNNER EXAMPLE
-# ============================================================
-
-# runs-on:
-#   - self-hosted
-#   - linux
-#   - x64
-
-
-# ============================================================
-# MULTIPLE RUNNER OPTIONS
-# ============================================================
-
-# runs-on: ${{ matrix.os }}
-#
-# strategy:
-#   matrix:
-#     os:
-#       - ubuntu-latest
-#       - windows-latest
-#       - macos-latest
-
-
-# ============================================================
-# ENVIRONMENT / APPROVAL
-# ============================================================
-
-# environment:
-#   name: production
-#   url: https://example.com
-#
-# Configure required reviewers, deployment branches,
-# environment secrets, and environment variables in:
-#
-# Repository
-#   -> Settings
-#   -> Environments
-
-
-# ============================================================
-# TAG / RELEASE DEPLOYMENT
-# ============================================================
-
-# if: startsWith(github.ref, 'refs/tags/v')
-
-
-# ============================================================
-# BRANCH CONDITION
-# ============================================================
-
-# if: github.ref == 'refs/heads/main'
-
-
-# ============================================================
-# FILE / PATH CONDITION
-# ============================================================
-
-# on:
-#   push:
-#     paths:
-#       - "src/**"
-#       - "package.json"
-#       - "package-lock.json"
-
-
-# ============================================================
-# MANUAL INPUT EXAMPLE
-# ============================================================
-
-# github.event.inputs.environment
-#
-# Or, with typed workflow_dispatch inputs:
-#
-# inputs.environment
-#
-# inputs.debug
-# inputs.version
-
-
-# ============================================================
-# IMPORTANT SECURITY NOTES
-# ============================================================
-
-# 1. Never commit passwords, API keys, tokens, or private keys.
-#
-# 2. Use:
-#      ${{ secrets.SECRET_NAME }}
-#
-# 3. Give GITHUB_TOKEN only the permissions required.
-#
-# 4. Pin third-party actions to trusted versions/SHAs where
-#    appropriate.
-#
-# 5. Use GitHub Environments for production deployments.
-#
-# 6. Use environment secrets for environment-specific secrets.
-#
-# 7. Be careful when running untrusted pull-request code with
-#    privileged secrets.
-#
-# 8. Prefer OIDC (id-token: write) for cloud authentication
-#    instead of long-lived cloud credentials.
+if: cancelled()
 ```
 
+### Step Condition Examples
+
+```yaml
+- name: Production only
+  if: github.ref == 'refs/heads/main'
+  run: echo "Production"
+```
+
+## Common Contexts
+
+### GitHub Context
+
+```yaml
+${{ github.repository }}
+${{ github.ref }}
+${{ github.sha }}
+${{ github.actor }}
+${{ github.event_name }}
+${{ github.workspace }}
+${{ github.run_id }}
+${{ github.run_number }}
+```
+
+### Environment
+
+```yaml
+${{ env.APP_NAME }}
+```
+
+### Secrets
+
+```yaml
+${{ secrets.API_KEY }}
+${{ secrets.DEPLOY_TOKEN }}
+```
+
+### Variables
+
+```yaml
+${{ vars.ENVIRONMENT }}
+```
+
+### Job Outputs
+
+```yaml
+${{ needs.build.outputs.version }}
+```
+
+### Matrix
+
+```yaml
+${{ matrix.node-version }}
+```
+
+### Steps
+
+```yaml
+${{ steps.version.outputs.version }}
+```
+
+## Reusable Workflow Example
+
+A reusable workflow can use:
+
+```yaml
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+    secrets:
+      deploy_token:
+        required: true
+```
+
+Then call it using:
+
+```yaml
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: production
+    secrets:
+      deploy_token: ${{ secrets.DEPLOY_TOKEN }}
+```
+
+## Reusable Workflow / External Workflow Call
+
+```yaml
+jobs:
+  deploy:
+    uses: organization/repository/.github/workflows/deploy.yml@main
+    with:
+      environment: production
+    secrets: inherit
+```
+
+## Composite / Custom Action Example
+
+```yaml
+steps:
+  - name: Run custom action
+    uses: ./.github/actions/my-action
+    with:
+      environment: production
+```
+
+## Docker Example
+
+```yaml
+- name: Build Docker image
+  run: |
+    docker build \
+      --tag my-app:${{ github.sha }} \
+      .
+
+- name: Login to registry
+  uses: docker/login-action@v3
+  with:
+    registry: ghcr.io
+    username: ${{ github.actor }}
+    password: ${{ secrets.GITHUB_TOKEN }}
+
+- name: Push image
+  run: |
+    docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
+```
+
+## Artifact Examples
+
+### Upload
+
+```yaml
+- uses: actions/upload-artifact@v4
+  with:
+    name: artifact-name
+    path: ./dist
+```
+
+### Download
+
+```yaml
+- uses: actions/download-artifact@v4
+  with:
+    name: artifact-name
+    path: ./dist
+```
+
+## Cache Example
+
+```yaml
+- uses: actions/cache@v4
+  with:
+    path: ~/.cache/my-tool
+    key: ${{ runner.os }}-my-tool-${{ hashFiles('**/lockfile') }}
+    restore-keys: |
+      ${{ runner.os }}-my-tool-
+```
+
+## Shell Options
+
+```yaml
+defaults:
+  run:
+    shell: bash
+    working-directory: ./app
+```
+
+## Default Working Directory
+
+```yaml
+defaults:
+  run:
+    working-directory: ./src
+```
+
+## Self-Hosted Runner Example
+
+```yaml
+runs-on:
+  - self-hosted
+  - linux
+  - x64
+```
+
+## Multiple Runner Options
+
+```yaml
+runs-on: ${{ matrix.os }}
+
+strategy:
+  matrix:
+    os:
+      - ubuntu-latest
+      - windows-latest
+      - macos-latest
+```
+
+## Environment / Approval
+
+```yaml
+environment:
+  name: production
+  url: https://example.com
+```
+
+Configure required reviewers, deployment branches, environment secrets, and environment variables in:
+
+```text
+Repository
+  -> Settings
+  -> Environments
+```
+
+## Tag / Release Deployment
+
+```yaml
+if: startsWith(github.ref, 'refs/tags/v')
+```
+
+## Branch Condition
+
+```yaml
+if: github.ref == 'refs/heads/main'
+```
+
+## File / Path Condition
+
+```yaml
+on:
+  push:
+    paths:
+      - "src/**"
+      - "package.json"
+      - "package-lock.json"
+```
+
+## Manual Input Example
+
+```yaml
+github.event.inputs.environment
+```
+
+Or, with typed `workflow_dispatch` inputs:
+
+```yaml
+inputs.environment
+inputs.debug
+inputs.version
+```
+
+## Important Security Notes
+
+1. Never commit passwords, API keys, tokens, or private keys.
+
+2. Use:
+
+```yaml
+${{ secrets.SECRET_NAME }}
+```
+
+3. Give `GITHUB_TOKEN` only the permissions required.
+
+4. Pin third-party actions to trusted versions/SHAs where appropriate.
+
+5. Use GitHub Environments for production deployments.
+
+6. Use environment secrets for environment-specific secrets.
+
+7. Be careful when running untrusted pull-request code with privileged secrets.
+
+8. Prefer OIDC (`id-token: write`) for cloud authentication instead of long-lived cloud credentials.
