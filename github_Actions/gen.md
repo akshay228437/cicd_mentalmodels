@@ -569,6 +569,8 @@ jobs:
       #     webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 ```
+
+```text
 # ============================================================
 # COMMON GITHUB ACTIONS FEATURES / OPTIONS
 # ============================================================
