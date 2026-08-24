@@ -1,3 +1,14 @@
+Generic structure at a glance
+.github/
+└── workflows/
+    ├── ci.yml
+    ├── cd.yml
+    ├── release.yml
+    └── reusable-deploy.yml
+
+
+And conceptually:
+
 Workflow
 │
 ├── name
@@ -36,3 +47,6 @@ Workflow
     │   └── secrets
     │
     └── notify
+
+
+This is intentionally a reference/template, rather than something you would use unchanged in production. You would normally split CI, deployment, release, and reusable workflows into separate YAML files once the repository grows.
